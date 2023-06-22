@@ -1,10 +1,9 @@
-import { Model } from "mongoose";
-
 export type UserName = {
   firstName: string;
   middleName: string;
 };
-export type IUSer = {
+
+export type IUser = {
   phoneNumber: string;
   role: "seller" | "buyer";
   password: string;
@@ -13,5 +12,3 @@ export type IUSer = {
   budget: string;
   income: string;
 };
-
-export type UserModel = Model<IUSer, Record<string, unknown>>;

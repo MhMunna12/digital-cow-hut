@@ -1,7 +1,9 @@
-import { Schema, model } from "mongoose";
-import { IUSer, UserModel } from "./user.interface";
+import { Model, Schema, model } from "mongoose";
+import { IUser } from "./user.interface";
 
-const userSchema = new Schema<IUSer, UserModel>(
+type UserModel = Model<IUser, object>;
+
+const userSchema = new Schema<IUser>(
   {
     phoneNumber: {
       type: String,
@@ -9,7 +11,11 @@ const userSchema = new Schema<IUSer, UserModel>(
     },
     role: {
       type: String,
-      enum: ["seller", "buyer"],
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
     },
     name: {
       firstName: {
@@ -41,5 +47,4 @@ const userSchema = new Schema<IUSer, UserModel>(
     },
   }
 );
-
-export const User = model<IUSer, UserModel>("User", userSchema);
+export const User = model<IUser, UserModel>("User", userSchema);
