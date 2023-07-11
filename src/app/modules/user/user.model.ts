@@ -10,6 +10,7 @@ const userSchema = new Schema<IUser>(
     role: {
       type: String,
       required: true,
+      enum: ["seller", "buyer"],
     },
     password: {
       type: String,
