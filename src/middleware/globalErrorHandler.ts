@@ -4,6 +4,7 @@ import { IGenericErrorMessage } from "../interfaces/error";
 import handleValidationError from "../errors/handleValidationError";
 import { Error } from "mongoose";
 import ApiError from "../errors/ApiError";
+import handleCastError from "../errors/castError";
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let statusCode = 500;
@@ -12,6 +13,11 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
   if (err?.name === "ValidatorError") {
     const simplifiedError = handleValidationError(err);
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorMessage = simplifiedError.errorMessage;
+  } else if (err?.name === "CastError") {
+    const simplifiedError = handleCastError(err);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorMessage = simplifiedError.errorMessage;
