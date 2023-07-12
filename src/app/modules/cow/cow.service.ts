@@ -3,19 +3,11 @@ import { paginationHelpers } from "../../../helpers/paginationHelpers";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import { ICow } from "./cow.interface";
 import { Cow } from "./cow.model";
+import { IGenericResponses } from "../../../interfaces/common";
 
 const createCow = async (payload: ICow): Promise<ICow> => {
   const result = await Cow.create(payload);
   return result;
-};
-
-type IGenericResponses<T> = {
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
-  };
-  data: T;
 };
 
 // type ICowFilters = {
@@ -73,7 +65,11 @@ const getAllCow = async (
   if (sortBy && sortOrder) {
     sortConditions[sortBy] = sortOrder;
   }
-  const result = await Cow.find().sort(sortConditions).skip(skip).limit(limit);
+  const result = await Cow.find()
+    .populate("seller")
+    .sort(sortConditions)
+    .skip(skip)
+    .limit(limit);
   const total = await Cow.countDocuments();
   return {
     meta: {

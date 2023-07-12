@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { UserService } from "./user.service";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
+import pick from "../../../shared/pick";
+import { IUser } from "./user.interface";
 
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -17,12 +19,16 @@ const createUser = catchAsync(
     next();
   }
 );
+
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await UserService.getAllUser();
-  res.status(200).json({
+  const paginationOptions = pick(req.query, ["page", "limit"]);
+  const result = await UserService.getAllUser(paginationOptions);
+  sendResponse<IUser[]>(res, {
+    statusCode: 200,
     success: true,
     message: "User retrieved successfully!",
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 const getSingleUser = catchAsync(async (req: Request, res: Response) => {
