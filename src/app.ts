@@ -1,9 +1,7 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
-import { UserRoutes } from "./app/modules/user/user.route";
 import globalErrorHandler from "./middleware/globalErrorHandler";
-import ApiError from "./errors/ApiError";
-import { CowRoutes } from "./app/modules/cow/cow.route";
+import routes from "./app/routes";
 const app: Application = express();
 const port = 5000;
 //cors
@@ -12,17 +10,27 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //application routes
-app.use("/api/v1/users/", UserRoutes);
-app.use("/api/v1/cow/", CowRoutes);
 
-// app.get("/", (req: Request, res: Response) => {
-//   res.send("Hello cow!");
-// });
-app.get("/", (req: Request, res: Response, next: NextFunction) => {
-  // throw new ApiError(400, "error");
-  // next("error");
+app.use("/api/v1/", routes);
+
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello cow!");
 });
+
 //global error handler
 app.use(globalErrorHandler);
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(404).json({
+    success: false,
+    message: "Not Found",
+    errorMessage: [
+      {
+        path: req.originalUrl,
+        message: "Api not found",
+      },
+    ],
+  });
+  next();
+});
 
 export default app;
