@@ -6,7 +6,7 @@ import { Error } from "mongoose";
 import ApiError from "../errors/ApiError";
 import handleCastError from "../errors/castError";
 
-const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
+const globalErrorHandler: ErrorRequestHandler = (err, req, res) => {
   let statusCode = 500;
   let message = "Something went wrong";
   let errorMessage: IGenericErrorMessage[] = [];
@@ -50,6 +50,5 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     errorMessage,
     stack: config.env !== "production" ? err?.stack : undefined,
   });
-  next();
 };
 export default globalErrorHandler;

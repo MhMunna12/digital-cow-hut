@@ -5,18 +5,15 @@ import sendResponse from "../../../shared/sendResponse";
 import pick from "../../../shared/pick";
 import { ICow } from "./cow.interface";
 
-const createCow = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { ...cowData } = req.body;
-    const result = await CowService.createCow(cowData);
-    res.status(200).json({
-      success: true,
-      message: "cow created successfully!",
-      data: result,
-    });
-    next();
-  }
-);
+const createCow = catchAsync(async (req: Request, res: Response) => {
+  const { ...cowData } = req.body;
+  const result = await CowService.createCow(cowData);
+  res.status(200).json({
+    success: true,
+    message: "cow created successfully!",
+    data: result,
+  });
+});
 const getAllCow = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // const filters = pick(req.query, ["searchTerm"]);
@@ -34,7 +31,6 @@ const getAllCow = catchAsync(
       meta: result.meta,
       data: result.data,
     });
-    next();
   }
 );
 const getSingleCow = catchAsync(async (req: Request, res: Response) => {
@@ -60,9 +56,21 @@ const updateCow = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const deleteCow = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await CowService.deleteCow(id);
+
+  sendResponse<ICow>(res, {
+    statusCode: 200,
+    success: true,
+    message: "Deleted Cow  successfully!",
+    data: result,
+  });
+});
 export const CowController = {
   createCow,
   getAllCow,
   getSingleCow,
   updateCow,
+  deleteCow,
 };
