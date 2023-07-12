@@ -17,9 +17,54 @@ type IGenericResponses<T> = {
   };
   data: T;
 };
+
+// type ICowFilters = {
+//   searchTerm?: string;
+// };
 const getAllCow = async (
+  // filters: ICowFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponses<ICow[]>> => {
+  // const { searchTerm } = filters;
+
+  // console.log(searchTerm);
+  // const cowSearchAbleFields = ["location", "breed", "category"];
+  // const andConditions = [];
+  // if (searchTerm) {
+  //   andConditions.push({
+  //     $or: cowSearchAbleFields.map((field) => ({
+  //       [field]: {
+  //         $regex: searchTerm,
+  //         $operator: "i",
+  //       },
+  //     })),
+  //   });
+  // }
+  // const andConditions = [
+  //   {
+  //     $or: [
+  //       {
+  //         location: {
+  //           $regex: searchTerm,
+  //           $options: "i",
+  //         },
+  //       },
+  //       {
+  //         breed: {
+  //           $regex: searchTerm,
+  //           $options: "i",
+  //         },
+  //       },
+  //       {
+  //         category: {
+  //           $regex: searchTerm,
+  //           $options: "i",
+  //         },
+  //       },
+  //     ],
+  //   },
+  // ];
+
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -39,7 +84,12 @@ const getAllCow = async (
     data: result,
   };
 };
+const getSingleCow = async (id: string): Promise<ICow | null> => {
+  const result = await Cow.findById(id);
+  return result;
+};
 export const CowService = {
   createCow,
   getAllCow,
+  getSingleCow,
 };

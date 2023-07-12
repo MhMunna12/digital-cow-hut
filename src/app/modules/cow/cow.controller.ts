@@ -19,6 +19,7 @@ const createCow = catchAsync(
 );
 const getAllCow = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    // const filters = pick(req.query, ["searchTerm"]);
     const paginationOptions = pick(req.query, [
       "page",
       "limit",
@@ -36,7 +37,19 @@ const getAllCow = catchAsync(
     next();
   }
 );
+const getSingleCow = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await CowService.getSingleCow(id);
+
+  sendResponse<ICow>(res, {
+    statusCode: 200,
+    success: true,
+    message: "Single Cow retrieved successfully!",
+    data: result,
+  });
+});
 export const CowController = {
   createCow,
   getAllCow,
+  getSingleCow,
 };
